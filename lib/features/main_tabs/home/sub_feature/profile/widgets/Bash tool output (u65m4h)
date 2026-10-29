@@ -1,0 +1,84 @@
+import '../../../../../app/helper_widgets_export.dart';
+import '../../../../../core/services/more/support/contact_support/contact_support_service.dart';
+import '../../../../../core/utils/validator/validators.dart';
+
+class ContactSupportController extends GetxController {
+  // Controllers
+  final nameCtrl = TextEditingController();
+  final emailCtrl = TextEditingController();
+  final messageCtrl = TextEditingController();
+
+  // Focus nodes
+  final nameFocus = FocusNode();
+  final emailFocus = FocusNode();
+  final messageFocus = FocusNode();
+
+  // Loading state
+  final isLoading_ = false.obs;
+  bool get isLoading => isLoading_.value;
+
+  @override
+  void onClose() {
+    nameCtrl.dispose();
+    emailCtrl.dispose();
+    messageCtrl.dispose();
+
+    nameFocus.dispose();
+    emailFocus.dispose();
+    messageFocus.dispose();
+
+    super.onClose();
+  }
+
+  void clearForm() {
+    nameCtrl.clear();
+    emailCtrl.clear();
+    messageCtrl.clear();
+
+    nameFocus.unfocus();
+    emailFocus.unfocus();
+    messageFocus.unfocus();
+  }
+
+  Future<void> onTapSubmit({required GlobalKey<FormState> formKey}) async {
+    final isValid = validateForm(formKey);
+
+    // STOP if invalid OR already loading
+    if (!isValid || isLoading_.value) return;
+
+    isLoading_.value = true;
+
+    final success = await ContactSupportService().sendSupportMsg(
+      name: nameCtrl.text.trim(),
+      email: emailCtrl.text.trim(),
+      messageDes: messageCtrl.text.trim(),
+    );
+
+    isLoading_.value = false;
+
+    if (success) {
+      clearForm();
+    }
+  }
+}
+lib/routes/route_transition.dart-21-
+lib/routes/route_transition.dart-22-      // // Modal-like screens
+lib/routes/route_transition.dart:23:      // case RoutePaths.contactSupport:
+lib/routes/route_transition.dart-24-      // case RoutePaths.reviewAndRating:
+lib/routes/route_transition.dart-25-      //   return Transition.cupertinoDialog;
+lib/routes/route_transition.dart-26-
+lib/routes/route_transition.dart-27-      // Default fallback
+lib/routes/route_paths.dart-78-  static const accountSettings = '/accountSettings';
+lib/routes/route_paths.dart-79-  static const changePassword = '/changePassword';
+lib/routes/route_paths.dart:80:  static const contactSupport = '/contactSupport';
+lib/routes/route_paths.dart-81-  static const notificationSettings = '/notificationSettings';
+lib/routes/route_paths.dart-82-  static const privacyPolicy = '/privacyPolicy';
+lib/routes/route_paths.dart-83-  static const termsAndConditions = '/termsAndConditions';
+lib/routes/route_paths.dart-84-  static const notification = '/notification';
+lib/routes/pages.dart-311-    ),
+lib/routes/pages.dart-312-    GetPage(
+lib/routes/pages.dart:313:      name: RoutePaths.contactSupport,
+lib/routes/pages.dart-314-      page: () => const ContactSupportScreen(),
+lib/routes/pages.dart-315-      binding: ContactSupportBinding(),
+lib/routes/pages.dart-316-    ),
+lib/routes/pages.dart-317-    GetPage(
